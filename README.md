@@ -1,5 +1,9 @@
 # LinxCGMKit for Trio
 
+![CI](https://github.com/Hristos0527/LinxCGMKit-Trio/actions/workflows/ci.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/Hristos0527/LinxCGMKit-Trio?label=release)
+![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
+
 ## Author
 
 **Hristos** ([@Hristos0527](https://github.com/Hristos0527)) — developer and maintainer of this community plugin.
