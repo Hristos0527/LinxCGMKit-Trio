@@ -4,16 +4,16 @@ import LoopKit
 public struct LinxCGMManagerState: RawRepresentable, Equatable {
     public typealias RawValue = CGMManager.RawStateValue
 
-    /// A figyelt szenzor sorozatszáma (pl. "LinX-2222296PN2"). nil = bármelyik.
+    /// Serial number of the monitored sensor (e.g. "LinX-2222296PN2"). nil = any.
     public var sensorSerial: String?
 
-    /// Kétpontos kalibráció (meredekség + eltolás + a rögzített pontok).
+    /// Two-point calibration (slope + offset + recorded points).
     public var calibration: LinxCalibration
 
-    /// Az utolsó dekódolt mérés ideje (státusz-kijelzéshez).
+    /// Time of the last decoded reading (for status display).
     public var latestReadingDate: Date?
 
-    /// Feltöltsük-e a Nightscoutra (Loop "Upload Readings").
+    /// Whether to upload to Nightscout (Loop "Upload Readings").
     public var uploadReadings: Bool = true
 
     public init(

@@ -41,8 +41,8 @@ extension LinxCGMManager: CGMManagerUI {
     // MARK: - CGMStatusIndicator
 
     public var cgmStatusHighlight: DeviceStatusHighlight? {
-        // Jelvesztés-jelzés, ha 15 percnél régebbi az utolsó érték.
-        if let last = state.latestReadingDate, last.timeIntervalSinceNow < -(15 * 60) { // 15 perc másodpercben
+        // Signal-loss indicator when the last value is older than 15 minutes.
+        if let last = state.latestReadingDate, last.timeIntervalSinceNow < -(15 * 60) { // 15 minutes in seconds
             return LinxStatusHighlight(
                 localizedMessage: "Signal\nlost",
                 imageName: "exclamationmark.circle.fill",

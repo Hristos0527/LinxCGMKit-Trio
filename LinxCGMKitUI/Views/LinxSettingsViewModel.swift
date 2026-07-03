@@ -9,7 +9,7 @@ class LinxSettingsViewModel: ObservableObject, LinxStateObserver {
     private var displayGlucosePreference: DisplayGlucosePreference
 
     @Published var sensorSerial: String
-    /// Hatótávon belül érzékelt Linx szenzorok (a kiválasztó listához).
+    /// Linx sensors detected in range (for the picker list).
     @Published var nearbyDevices: [LinxNearbyDevice] = []
     @Published var statusText: String
     @Published var latestGlucoseText: String
@@ -42,32 +42,32 @@ class LinxSettingsViewModel: ObservableObject, LinxStateObserver {
         return String(format: "%.1f mmol/L (%d mg/dL)", r.glucoseMmol, r.glucoseMgdl)
     }
 
-    /// A legutóbbi mérés nyers glu10 értéke (kalibrációhoz).
+    /// Raw glu10 value from the latest reading (for calibration).
     var currentRaw10: Int? { cgmManager.latestReading?.raw10 }
 
-    // MARK: - Akciók
+    // MARK: - Actions
 
     func saveSerial() {
         cgmManager.setSensorSerial(sensorSerial.trimmingCharacters(in: .whitespaces))
     }
 
-    /// A kiválasztó listából választott szenzor rögzítése: csak szűrünk rá,
-    /// csatlakozni nem kell (a Linx hirdetésből olvasunk). A teljes hirdetett
-    /// nevet mentjük el, így pontosan erre az egy szenzorra szűr a scanner.
+    /// Persist the sensor chosen from the picker list: we only filter to it,
+    /// no connection is needed (we read from Linx advertisements). We save the
+    /// full advertised name so the scanner filters to exactly this one sensor.
     func selectDevice(_ device: LinxNearbyDevice) {
         sensorSerial = device.name
         cgmManager.setSensorSerial(device.name)
     }
 
-    /// A beállítások megnyitásakor hívjuk: elindítja a szkennelést és
-    /// betölti az aktuálisan ismert szenzorlistát.
+    /// Called when opening settings: starts scanning and loads the currently
+    /// known sensor list.
     func startScanning() {
         cgmManager.startScanningForPicker()
         nearbyDevices = cgmManager.nearbyDevices
     }
 
-    /// Új kalibrációs pont rögzítése a megadott referencia mmol-lal,
-    /// a JELENLEGI nyers glu10 értékre.
+    /// Record a new calibration point with the given reference mmol/L against
+    /// the CURRENT raw glu10 value.
     func addCalibration(refMmol: Double) {
         guard let raw10 = currentRaw10 else { return }
         cgmManager.addCalibration(glu10: raw10, mmol: refMmol)

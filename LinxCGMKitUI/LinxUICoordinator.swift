@@ -36,10 +36,10 @@ class LinxUICoordinator: UINavigationController, CGMManagerOnboarding, Completio
 
     private func initialView() -> UIViewController {
         if cgmManager == nil {
-            // Setup: létrehozzuk a managert és átadjuk a beállító nézetet.
+            // Setup: create the manager and present the settings view.
             let manager = LinxCGMManager()
             cgmManager = manager
-            // Értesítjük a Loopot, hogy létrejött (és onboarded).
+            // Notify Loop that it was created (and onboarded).
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: manager)
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: manager)
         }
