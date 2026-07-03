@@ -6,30 +6,30 @@ import UIKit
 #endif
 
 public protocol LinxScannerDelegate: AnyObject {
-    /// Új, dekódolható mérés érkezett a megadott (vagy bármelyik, ha nincs
-    /// szűrés) szenzortól.
+    /// A new decodable reading arrived from the specified (or any, if not
+    /// filtered) sensor.
     func linxScanner(_ scanner: LinxScanner, didRead reading: LinxGlucoseReading)
-    /// A szkenner állapota változott (log/diagnosztika).
+    /// Scanner state changed (log/diagnostics).
     func linxScanner(_ scanner: LinxScanner, didUpdateStatus status: String)
-    /// A scanner kéri az aktuális kalibrációt a dekódoláshoz.
+    /// Scanner requests current calibration for decoding.
     func calibrationForLinxScanner(_ scanner: LinxScanner) -> LinxCalibration
-    /// A scanner kéri a beállított szenzor-sorozatszámot (nil = bármelyik).
+    /// Scanner requests configured sensor serial number (nil = any).
     func sensorSerialForLinxScanner(_ scanner: LinxScanner) -> String?
-    /// Hatótávon belül érzékelt Linx szenzor (a kiválasztó listához).
-    /// advName = a hirdetett teljes név ("LinX-..."), rssi = jelerősség.
+    /// Linx sensor detected in range (for the picker list).
+    /// advName = advertised full name ("LinX-..."), rssi = signal strength.
     func linxScanner(_ scanner: LinxScanner, didDiscoverDeviceNamed advName: String, rssi: Int)
 }
 
 public final class LinxScanner: NSObject {
     public weak var delegate: LinxScannerDelegate?
 
-    /// A Linx szenzor által hirdetett service-UUID (16-bit SIG: 181F).
+    /// Service UUID advertised by the Linx sensor (16-bit SIG: 181F).
     public static let linxServiceUUID = CBUUID(string: "181F")
 
-    /// Háttérben ennyi csend után újraindítjuk a scant (watchdog).
+    /// In background, restart scan after this much silence (watchdog).
     public static let backgroundScanStaleInterval: TimeInterval = 4 * 60
 
-    /// A gyártói ID a manufacturer data első 2 bájtja, little-endian (Nordic).
+    /// Manufacturer ID is the first 2 bytes of manufacturer data, little-endian (Nordic).
     private let expectedManufacturerID: UInt16 = 0x0059
 
     private let log = OSLog(subsystem: "com.linxcgmkit", category: "LinxScanner")
@@ -38,9 +38,9 @@ public final class LinxScanner: NSObject {
     private var lastSeen: [UUID: Date] = [:]
 
     public private(set) var isScanning: Bool = false
-    /// Utolsó érvényes Linx manufacturer advertisement ideje (dekódolástól függetlenül).
+    /// Time of last valid Linx manufacturer advertisement (regardless of decode).
     public private(set) var lastAdvertisementAt: Date?
-    /// Utolsó háttér scan-kick / watchdog restart ideje.
+    /// Time of last background scan kick / watchdog restart.
     public private(set) var lastScanRestartAt: Date?
 
     override public init() {
@@ -48,19 +48,18 @@ public final class LinxScanner: NSObject {
         ensureCentral()
     }
 
-    /// A CBCentralManager LUSTA, egyszeri létrehozása.
-    /// Fontos: CGM törlés→újra-hozzáadás után az új LinxCGMManager új scannert
-    /// hoz létre. Ha ilyenkor azonnal új CBCentralManager-t csinálnánk ugyanazzal
-    /// a State Restoration ID-vel, miközben a régi belső BLE-állapot még "él",
-    /// a CoreBluetooth összezavarodhat és hibás állapotba (akár .unsupported-szerű)
-    /// kerülhet. Ezért biztosítjuk, hogy mindig csak EGY managerünk legyen, és
-    /// az átmeneti (.unknown/.resetting) állapotokat türelmesen kezeljük.
+    /// LAZY, one-time creation of CBCentralManager.
+    /// Important: after CGM delete→re-add, the new LinxCGMManager creates a new scanner.
+    /// If we immediately created a new CBCentralManager with the same State Restoration ID
+    /// while the old internal BLE state is still "alive", CoreBluetooth can get confused
+    /// and end up in a bad state (possibly .unsupported-like). So we ensure we always have
+    /// only ONE manager, and handle transient (.unknown/.resetting) states patiently.
     private func ensureCentral() {
         guard central == nil else { return }
-        // NINCS State Restoration ID: így a manager minden alkalommal tisztán
-        // jön létre, és a CGM törlés→újra-hozzáadás sosem akad össze.
-        // (A Loop a pumpa-kommunikáció miatt amúgy is gyakran ébren tartja az
-        //  appot, így a háttér-olvasás a gyakorlatban továbbra is működik.)
+        // NO State Restoration ID: the manager is created cleanly every time, and
+        // CGM delete→re-add never collides.
+        // (Loop keeps the app awake often anyway for pump communication, so background
+        //  reading still works in practice.)
         central = CBCentralManager(
             delegate: self,
             queue: nil,
@@ -75,7 +74,7 @@ public final class LinxScanner: NSObject {
         switch central?.state {
         case .poweredOn:
             if isAppInBackground, isScanning {
-                // Háttérben a Loop heartbeat-jén frissítjük a scan ciklust.
+                // In background, refresh the scan cycle on Loop heartbeat.
                 restartScan(reason: "heartbeat kick")
             } else {
                 startScan()
@@ -83,15 +82,15 @@ public final class LinxScanner: NSObject {
         case .none,
              .some(.resetting),
              .some(.unknown):
-            // Átmeneti állapot — a centralManagerDidUpdateState úgyis elindítja
-            // a scant, amint .poweredOn lesz. Itt nem kell tenni semmit.
+            // Transient state — centralManagerDidUpdateState will start scanning
+            // once .poweredOn. Nothing to do here.
             notify("Bluetooth starting...")
         default:
             break
         }
     }
 
-    /// Ha háttérben túl régóta nincs friss adat, stopScan → startScan.
+    /// In background, if there has been no fresh data for too long, stopScan → startScan.
     public func restartScanIfStale(lastDataAt: Date?) {
         guard isAppInBackground else { return }
         let reference = [lastDataAt, lastAdvertisementAt]
@@ -105,8 +104,8 @@ public final class LinxScanner: NSObject {
 
     private func startScan() {
         guard let central = central, central.state == .poweredOn else { return }
-        // Háttérben AllowDuplicatesKey: true — iOS throttling ellen minden
-        // advertisement callbacket megkapunk; a 3 perces gate szűri a Loop kimenetet.
+        // In background AllowDuplicatesKey: true — against iOS throttling we get every
+        // advertisement callback; the 3-minute gate filters Loop output.
         let allowDuplicates = isAppInBackground
         central.scanForPeripherals(
             withServices: [Self.linxServiceUUID],
@@ -114,7 +113,7 @@ public final class LinxScanner: NSObject {
         )
         isScanning = true
         logScanDiagnostics(context: allowDuplicates ? "startScan(bg dup=1)" : "startScan(fg dup=0)")
-        notify(allowDuplicates ? "Scan fut (181F, bg duplicates)..." : "Scan fut (181F)...")
+        notify(allowDuplicates ? "Scan running (181F, bg duplicates)..." : "Scan running (181F)...")
     }
 
     private func restartScan(reason: String) {
@@ -159,9 +158,9 @@ public final class LinxScanner: NSObject {
         os_log("%{public}@", log: log, type: .info, msg)
     }
 
-    /// A scan leállítása és a manager elengedése (CGM törlésekor hívjuk).
-    /// Ez biztosítja, hogy a régi CBCentralManager felszabaduljon, mielőtt
-    /// egy újra-hozzáadás új managert hozna létre ugyanazzal a restore ID-vel.
+    /// Stop scanning and release the manager (called on CGM deletion).
+    /// Ensures the old CBCentralManager is freed before re-add creates a new one
+    /// with the same restore ID.
     public func stop() {
         if let central = central, central.state == .poweredOn, isScanning {
             central.stopScan()
@@ -192,8 +191,8 @@ extension LinxScanner: CBCentralManagerDelegate {
         case .unsupported:
             notify("Device does not support BLE")
         case .resetting:
-            // A BLE-rendszer épp újraindul (pl. CGM törlés→újra-hozzáadás után).
-            // NEM végleges hiba — várunk, amíg .poweredOn lesz.
+            // BLE stack is restarting (e.g. after CGM delete→re-add).
+            // NOT a permanent error — wait until .poweredOn.
             isScanning = false
             notify("Bluetooth restarting, waiting...")
         case .unknown:
@@ -212,7 +211,7 @@ extension LinxScanner: CBCentralManagerDelegate {
         let advName = (advertisementData[CBAdvertisementDataLocalNameKey] as? String)
             ?? peripheral.name ?? ""
 
-        // Manufacturer data kiolvasása
+        // Read manufacturer data
         guard let mfg = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
             return
         }
@@ -222,35 +221,35 @@ extension LinxScanner: CBCentralManagerDelegate {
             ? UInt16(bytes[0]) | (UInt16(bytes[1]) << 8)
             : 0
 
-        // Biztonsági szűrés: csak Nordic (0x0059) 27-bájtos Linx csomag.
+        // Safety filter: Nordic (0x0059) 27-byte Linx packet only.
         guard mfgID == expectedManufacturerID, bytes.count == 27 else { return }
         lastAdvertisementAt = Date()
 
-        // Kiválasztó lista: CSAK olyan eszközt jelentünk a UI-nak, aminek a
-        // nevében szerepel a "Linx" (más BT-eszköz sosem). Ez a sorozatszám-
-        // szűrés ELŐTT fut, hogy minden hatótávon belüli Linx megjelenjen.
+        // Picker list: report to the UI ONLY devices whose name contains "Linx"
+        // (never other BT devices). This runs BEFORE serial filtering so every
+        // in-range Linx appears.
         if advName.lowercased().contains("linx") {
             delegate?.linxScanner(self, didDiscoverDeviceNamed: advName, rssi: RSSI.intValue)
         }
 
-        // Sorozatszám-szűrés: ha a felhasználó megadott egyet, csak azt fogadjuk.
+        // Serial filter: if the user specified one, accept only that sensor.
         if let wanted = delegate?.sensorSerialForLinxScanner(self),
            !wanted.isEmpty
         {
-            // Részleges egyezés is elég (a hirdetett név "LinX-2222296PN2" formátum).
+            // Partial match is enough (advertised name is "LinX-2222296PN2" format).
             if !advName.isEmpty, !advName.contains(wanted) {
                 return
             }
         }
 
-        // Throttle: 1 mp eszközönként
+        // Throttle: 1 s per device
         let now = Date()
         if let last = lastSeen[peripheral.identifier], now.timeIntervalSince(last) < 1.0 {
             return
         }
         lastSeen[peripheral.identifier] = now
 
-        // Dekódolás az aktuális kalibrációval
+        // Decode with current calibration
         let cal = delegate?.calibrationForLinxScanner(self) ?? LinxCalibration()
         if let reading = LinxDecoder.decode(manufacturerData: mfg, advName: advName, calibration: cal) {
             delegate?.linxScanner(self, didRead: reading)

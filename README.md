@@ -61,6 +61,10 @@ See **[INTEGRATION.md](INTEGRATION.md)**.
 
 See **[CHANGELOG.md](CHANGELOG.md)**.
 
+## Publishing / community announcement
+
+See the shared guide in [EquilKit-Trio/WHERE_TO_CLICK.md](https://github.com/Hristos0527/EquilKit-Trio/blob/master/WHERE_TO_CLICK.md).
+
 ## License
 
 [AGPL-3.0](LICENSE)

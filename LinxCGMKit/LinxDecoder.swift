@@ -1,19 +1,19 @@
 import Foundation
 
-/// Egy dekódolt Linx mérés.
+/// A decoded Linx reading.
 public struct LinxGlucoseReading: Equatable {
     public let receivedAt: Date
     public let glucoseMgdl: Int
     public let trend: Int // 0..3 (idx7 >>10 &3)
-    public let raw10: Int // nyers glu10 (kalibrációhoz)
+    public let raw10: Int // raw glu10 (for calibration)
     public let serial: String?
     public let rawHex: String
 
     public var glucoseMmol: Double { Double(glucoseMgdl) / 18.0 }
 }
 
-/// Egy kalibrációs pont: a nyers glu10 + a felhasználó által megadott
-/// referencia vércukor (mmol/L). A plugin state-jében perzisztálva.
+/// A calibration point: raw glu10 + user-provided reference blood glucose
+/// (mmol/L). Persisted in the plugin state.
 public struct LinxCalPoint: Codable, Equatable {
     public let glu10: Int
     public let mmol: Double
@@ -26,21 +26,21 @@ public struct LinxCalPoint: Codable, Equatable {
     }
 }
 
-/// A kétpontos kalibráció: mmol = calA * glu10 + calB.
-/// A bevált, egész nap tesztelt logika 1:1 átemelve.
+/// Two-point calibration: mmol = calA * glu10 + calB.
+/// Proven, full-day-tested logic carried over 1:1.
 public struct LinxCalibration: Equatable {
-    // ✅ BEVÁLT ALAPGÖRBE (2026-06-18). A korábbi, jól működő app két valós
-    // referenciaponttal kalibrált, és ez egy napon át pontos volt a gyári
-    // Linx görbéhez igazítva:
-    //   nyers 108 -> 5.8 mmol
-    //   nyers 134 -> 7.5 mmol
-    //   Aktív görbe: mmol = 0.06538 * nyers - 1.2615
-    // Ellenőrzés: glu10≈137 -> 0.06538*137-1.2615 = 7.69 mmol ≈ a gyári Linx 7.8.
+    // ✅ PROVEN BASE CURVE (2026-06-18). The previous, working app was calibrated
+    // with two real reference points, and this matched the factory Linx curve
+    // accurately for a full day:
+    //   raw 108 -> 5.8 mmol
+    //   raw 134 -> 7.5 mmol
+    //   Active curve: mmol = 0.06538 * raw - 1.2615
+    // Check: glu10≈137 -> 0.06538*137-1.2615 = 7.69 mmol ≈ factory Linx 7.8.
     //
-    // A korábbi 0.01667-es alapmeredekség kb. 4× laposabb volt → mindent
-    // lenyomott (5.6-ot mutatott 7.8 helyett). A nyers dekódolás (glu10) végig
-    // helyes volt; csak ez az alapgörbe volt rossz. A standalone LinxReader
-    // appban ugyanezt a görbét égettük be.
+    // The previous 0.01667 base slope was ~4× flatter → everything was
+    // suppressed (showed 5.6 instead of 7.8). Raw decoding (glu10) was correct
+    // all along; only this base curve was wrong. The standalone LinxReader app
+    // baked in the same curve.
     public static let defaultCalA: Double = 0.06538
     public static let defaultCalB: Double = -1.2615
 
@@ -58,24 +58,24 @@ public struct LinxCalibration: Equatable {
         self.points = points
     }
 
-    /// Új referenciapont hozzáadása. A 2 legutóbbit tartjuk meg.
+    /// Add a new reference point. We keep the 2 most recent.
     public mutating func addPoint(glu10: Int, mmol: Double) {
         points.append(LinxCalPoint(glu10: glu10, mmol: mmol))
         if points.count > 2 { points = Array(points.suffix(2)) }
         recompute()
     }
 
-    /// Visszaállítás a gyári alaphangolásra.
+    /// Reset to factory default calibration.
     public mutating func reset() {
         points = []
         calA = LinxCalibration.defaultCalA
         calB = LinxCalibration.defaultCalB
     }
 
-    /// A pontokból újraszámolja calA/calB-t.
-    ///  - 2 pont, eltérő glu10  -> kétpontos illesztés (meredekség + eltolás)
-    ///  - 1 pont (vagy 2 azonos glu10) -> egypontos: meredekséget tartjuk,
-    ///    csak az eltolást igazítjuk, hogy a ponton pontos legyen
+    /// Recomputes calA/calB from the points.
+    ///  - 2 points, different glu10  -> two-point fit (slope + offset)
+    ///  - 1 point (or 2 identical glu10) -> single-point: keep slope,
+    ///    adjust offset so the point is exact
     public mutating func recompute() {
         if points.count >= 2, points[0].glu10 != points[1].glu10 {
             let (p1, p2) = (points[0], points[1])
@@ -88,7 +88,7 @@ public struct LinxCalibration: Equatable {
         }
     }
 
-    /// mmol kiszámítása a nyers glu10-ből.
+    /// Compute mmol from raw glu10.
     public func mmol(forRaw10 glu10: Int) -> Double {
         calA * Double(glu10) + calB
     }
@@ -97,8 +97,8 @@ public struct LinxCalibration: Equatable {
 public enum LinxDecoder {
     public static func mmolToMgdl(_ mmol: Double) -> Int { Int((mmol * 18.0).rounded()) }
 
-    /// Visszaadja a dekódolt mérést, vagy nil, ha bemelegedés / rossz hossz.
-    /// A kalibrációt kívülről kapja (a manager state-jéből).
+    /// Returns the decoded reading, or nil on warmup / bad length.
+    /// Calibration is supplied externally (from manager state).
     public static func decode(
         manufacturerData mfg: Data,
         advName: String,
@@ -109,19 +109,19 @@ public enum LinxDecoder {
 
         func le16(_ i: Int) -> Int { Int(b[i]) | (Int(b[i + 1]) << 8) }
 
-        // ── Legfrissebb nyers glükóz (idx 7-8) ──
+        // ── Latest raw glucose (idx 7-8) ──
         let raw16 = le16(7)
-        // Bemelegedés-szentinel: az alsó 16 bit 0xFFFF
+        // Warmup sentinel: lower 16 bits are 0xFFFF
         guard raw16 != 0xFFFF else { return nil }
 
         let glu10 = raw16 & 0x3FF
         let trend = (raw16 >> 10) & 3
 
-        // ── Kalibráció mmol → mg/dL ──
+        // ── Calibration mmol → mg/dL ──
         let mmol = calibration.mmol(forRaw10: glu10)
         let bg = mmolToMgdl(mmol)
 
-        // Józansági szűrő (1.5–30 mmol ~ 27–540 mg/dL)
+        // Sanity filter (1.5–30 mmol ~ 27–540 mg/dL)
         guard (27 ... 540).contains(bg) else { return nil }
 
         let hex = b.map { String(format: "%02X", $0) }.joined()
