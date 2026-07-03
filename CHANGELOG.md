@@ -24,4 +24,4 @@ Initial public community release (Trio Build #55 state).
 ### Notes
 
 - Original CGM plugin — **not** from AndroidAPS
-- Author self-tested ~2 weeks daily use before release (n=1)
+- Author: Hristos (@Hristos0527)

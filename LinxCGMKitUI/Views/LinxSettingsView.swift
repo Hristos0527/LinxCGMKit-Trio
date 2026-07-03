@@ -40,7 +40,7 @@ struct LinxSettingsView: View {
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.trailing)
             }
-            Text("A Loop ~3 percenként frissül az új Linx értékkel.")
+            Text("The Loop updates about every 3 minutes with a new Linx reading.")
                 .font(.footnote)
                 .foregroundColor(.secondary)
         }
@@ -60,7 +60,7 @@ struct LinxSettingsView: View {
         }
     }
 
-    // MARK: - Kiválasztó: hatótávon belüli Linx szenzorok (csak "Linx" nevűek)
+    // MARK: - Picker: nearby Linx sensors (names containing "Linx" only)
 
     private var nearbySection: some View {
         Section(
@@ -96,7 +96,7 @@ struct LinxSettingsView: View {
         }
     }
 
-    /// A teljes nevet jeleníti meg, az utolsó 2 karaktert félkövéren kiemelve.
+    /// Shows the full name with the last 2 characters in bold.
     private func deviceNameLabel(_ name: String) -> some View {
         let head = name.count > 2 ? String(name.dropLast(2)) : ""
         let tail = name.count >= 2 ? String(name.suffix(2)) : name
@@ -108,7 +108,7 @@ struct LinxSettingsView: View {
         .truncationMode(.middle)
     }
 
-    /// Jelerősség kis ikonnal + dBm értékkel.
+    /// Signal strength with a small icon and dBm value.
     private func rssiLabel(_ rssi: Int) -> some View {
         HStack(spacing: 4) {
             Image(
@@ -129,7 +129,7 @@ struct LinxSettingsView: View {
                 "Enter the current reference blood glucose (fingerstick or Dexcom). 2 different points set an accurate slope + offset. The raw signal comes from the sensor."
             )
         ) {
-            // Aktuális görbe
+            // Active curve
             HStack {
                 Text("Active curve")
                 Spacer()
@@ -138,7 +138,7 @@ struct LinxSettingsView: View {
                     .foregroundColor(.secondary)
             }
 
-            // Jelenlegi nyers érték
+            // Current raw value
             if let raw = viewModel.currentRaw10 {
                 HStack {
                     Text("Current raw (raw10)")
@@ -151,7 +151,7 @@ struct LinxSettingsView: View {
                     .foregroundColor(.secondary)
             }
 
-            // Rögzített pontok
+            // Recorded points
             if viewModel.calPoints.isEmpty {
                 Text("No calibration points (factory defaults).")
                     .font(.footnote)
@@ -167,7 +167,7 @@ struct LinxSettingsView: View {
                 }
             }
 
-            // Új pont rögzítése
+            // Record new point
             HStack {
                 TextField("Ref mmol/L", text: $refInput)
                     .keyboardType(.decimalPad)

@@ -1,5 +1,12 @@
 # LinxCGMKit for Trio
 
+## Author
+
+**Hristos** ([@Hristos0527](https://github.com/Hristos0527)) — developer and maintainer of this community plugin.
+
+- Self-tested on personal daily use (~2 weeks) before release
+- LinxCGMKit: original CGM plugin
+
 A **LoopKit `CGMManager` plugin** that reads the **Linx BLE glucose sensor** via passive advertisement scanning and feeds glucose to [Nightscout Trio](https://github.com/nightscout/Trio).
 
 > **Original CGM plugin** — not ported from AndroidAPS.
@@ -65,14 +72,3 @@ This software is provided **as-is** for **experienced developers** who build and
 - **Test thoroughly** — cross-check against an approved CGM; consider open loop / pump-off-body testing first.
 
 By building or using this code, you accept full responsibility for your diabetes management decisions.
-
----
-
-## Magyarul (röviden)
-
-**LinxCGMKit** passzív BLE scan-nel olvassa a Linx szenzort, 3 perces loop gate-tel és háttér scan watchdog-dal (Build #52).
-
-- **Eredeti CGM plugin** — nem AAPS-ből.
-- **~2 hete** saját magamon tesztelve.
-- **Saját felelősségre** buildelendő.
-- Bekötés: [INTEGRATION.md](INTEGRATION.md)
