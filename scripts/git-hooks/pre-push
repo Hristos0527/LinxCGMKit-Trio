@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pre-push: remind about unmerged cursor/* branches before pushing new work.
+# Pre-push: remind about unmerged agent/* (or legacy cursor/*) branches before pushing new work.
 # Install: ./scripts/install-git-hooks.sh
 
 set -euo pipefail

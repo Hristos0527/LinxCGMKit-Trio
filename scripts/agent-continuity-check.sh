@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Agent continuity check — find unmerged cursor/* branches and stale PRs.
+# Agent continuity check — find unmerged agent/* (or legacy cursor/*) branches and stale PRs.
 #
 # Usage:
 #   ./scripts/agent-continuity-check.sh
@@ -53,7 +53,7 @@ if [[ -n "$CURRENT" && "$CURRENT" != "$DEFAULT_BRANCH" ]]; then
   fi
 fi
 
-# cursor/* branches not merged into default (remote)
+# agent/* (and legacy cursor/*) branches not merged into default (remote)
 while IFS= read -r branch; do
   [[ -z "$branch" ]] && continue
   short="${branch#origin/}"
@@ -64,7 +64,7 @@ while IFS= read -r branch; do
   AHEAD="$(git rev-list --count "origin/${DEFAULT_BRANCH}..${branch}" 2>/dev/null || echo "?")"
   LAST="$(git log -1 --format='%cs %s' "$branch" 2>/dev/null || echo "?")"
   CRITICAL+=("Unmerged remote branch: ${short} (+${AHEAD} vs ${DEFAULT_BRANCH}) — last: ${LAST}")
-done < <(git branch -r --list 'origin/cursor/*' 2>/dev/null | sed 's/^[[:space:]]*//' | grep -v HEAD || true)
+done < <(git branch -r --list 'origin/cursor/*' 'origin/agent/*' 2>/dev/null | sed 's/^[[:space:]]*//' | grep -v HEAD || true)
 
 # gh PR checks (optional)
 if command -v gh >/dev/null 2>&1; then

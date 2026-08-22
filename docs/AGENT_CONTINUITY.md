@@ -46,7 +46,7 @@ Részletek: `task-board-repos.json` → `agent_continuity` szekció.
 
 1. `git fetch origin master && git checkout master && git pull`
 2. Olvasd: `docs/AGENT_STATUS.md`
-3. Keress régi munkát: `git branch -a | grep cursor/`, `gh pr list`, `git log --oneline --all --grep="kulcsszó"`
+3. Keress régi munkát: `git branch -a | grep -E 'cursor/|agent/'`, `gh pr list`, `git log --oneline --all --grep="kulcsszó"`
 4. Ha van releváns nyitott branch/PR → **folytasd azt**, ne új branch-et.
 
 ### Munka közben
@@ -72,18 +72,18 @@ Részletek: `task-board-repos.json` → `agent_continuity` szekció.
 Nem kell szöveget bemásolni — a `.cursor/rules` automatikusan érvényes. Ha mégis adsz kontextust:
 
 ```text
-Olvasd: docs/AGENT_CONTINUITY.md. Folytasd meglévő cursor/* branch-et, ne írd újra. Merge + deploy kötelező.
+Olvasd: docs/AGENT_CONTINUITY.md. Folytasd meglévő agent/* (vagy régi cursor/*) branch-et, ne írd újra. Merge + deploy kötelező.
 ```
 
 ---
 
-## Auto-merge `cursor/*` → default branch (C+D)
+## Auto-merge `agent/*` (és legacy `cursor/*`) → default branch (C+D)
 
-**Cél:** ne ragadjon bent a munka `cursor/*` ágon — minden listázott team repóban ([`.github/task-board-repos.json`](../.github/task-board-repos.json)).
+**Cél:** ne ragadjon bent a munka `agent/*` / `cursor/*` ágon — minden listázott team repóban ([`.github/task-board-repos.json`](../.github/task-board-repos.json)). A `linx-presentation-site` repo 2026-08-23 óta `agent/*`-ot használ; a többi team repo egyelőre még `cursor/*`-ot.
 
 | Útvonal | Mit csinál |
 |---------|------------|
-| **D — push** | `cursor/**` push → kész PR (ha kell) → **azonnali squash merge** a default branchre (**CI nélkül**) — workflow: `cursor-branch-auto-merge.yml` (sync minden repóra) |
+| **D — push** | `agent/**` (vagy `cursor/**`) push → kész PR (ha kell) → **azonnali squash merge** a default branchre (**CI nélkül**) — workflow: `agent-branch-auto-merge.yml` (sync minden repóra) |
 | **C — mentőháló** | Óránként a monorepóban: `auto-merge-cursor-prs.yml` + `scripts/auto-merge-cursor-prs.sh` — friss (&lt;48h) nem-draft PR-ek és orphan ágak |
 
 **Kihagyja:** draft PR, merge konfliktus, címben `WIP` / `do not merge`, régi (&gt;48h) orphan / stale PR (hygiene riport kezeli), excluded / `*private*` repók.
@@ -117,7 +117,7 @@ MIRROR_SYNC_TOKEN=... ./scripts/auto-merge-cursor-prs.sh --dry-run
 
 Mit néz:
 
-- `cursor/*` branch-ek, amik **nincsenek** merge-elve masterbe
+- `agent/*` / `cursor/*` branch-ek, amik **nincsenek** merge-elve masterbe
 - Branch-ek commitjaik masterhez képest (elavult / orphan)
 - Nyitott draft PR-ek 7+ napja
 - Lokális uncommitted változás
@@ -128,7 +128,7 @@ Mit néz:
 
 Ne törölj branch-et automatikusan. Sorrend:
 
-1. Van-e benne olyan commit, ami **nincs** masterben? → `git log master..origin/cursor/xyz`
+1. Van-e benne olyan commit, ami **nincs** masterben? → `git log master..origin/agent/xyz` (vagy `origin/cursor/xyz` régi ágaknál)
 2. Ha igen → **merge vagy portolás** masterre, aztán agent log „superseded by PR #…”
 3. Ha nem → branch törölhető remote-on
 
@@ -140,6 +140,6 @@ Garancia példa (2026-08): `cursor/garancia-dev-photo-lab-20260729` OpenAI logik
 
 1. Mi az **éles** verzió? (build-info, deploy log, worker URL)
 2. Mi van **masterben**?
-3. `git branch -a --no-merged master | grep cursor` — mi maradt ki?
+3. `git branch -a --no-merged master | grep -E 'cursor|agent'` — mi maradt ki?
 4. Prioritás: kritikus funkció branch-ek merge/port **előbb**, mint új feature
-5. Egy recovery branch: `cursor/recovery-<topic>-aadf` — csak port, ne rewrite
+5. Egy recovery branch: `agent/recovery-<topic>-aadf` — csak port, ne rewrite
