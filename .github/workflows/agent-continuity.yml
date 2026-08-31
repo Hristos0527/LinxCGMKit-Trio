@@ -6,7 +6,10 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    # Deliberately not `synchronize`: the report is about orphaned branches, which do
+    # not change when someone pushes to an open PR. Commenting on every push turned a
+    # day's work on one PR into six identical e-mails to its author (2026-08-31).
+    types: [opened, reopened, ready_for_review]
     branches: [master, main]
 
 permissions:
