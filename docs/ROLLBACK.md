@@ -149,6 +149,7 @@ A kulcs helye lokálisan: `artifacts/admin-auth/ADMIN_DEV_AUTH_KEY.txt` (gitigno
 
 | Change | Merge | Deploy version | Rollback |
 |--------|-------|----------------|----------|
+| external_comment: byte-based limit, cap 40 chars (2026-09-01) | `9e9e9bcc` | run `33511793385` | `git revert 9e9e9bcc` → deploy. Reverting restores the character-based cut, which Barry rejects for accented notes — prefer changing `BARRY_EXTERNAL_COMMENT_MAX_CHARS` instead |
 | /health redaction + orders/cancelled handling + timeout retry + CI trigger (2026-09-01) | `e7c01375`, test fix `6df8de9a`, scope revert `ed293b60` | CI runs `33500459743`, `33501483988` | `git revert` the merge → deploy. Reverting restores the catalogue leak on the public `/health`, so prefer a forward fix |
 
 > **Do not put a `customer` selection back into `ORDER_FIELDS`.** It needs the `read_customers`
