@@ -149,7 +149,13 @@ A kulcs helye lokálisan: `artifacts/admin-auth/ADMIN_DEV_AUTH_KEY.txt` (gitigno
 
 | Change | Merge | Deploy version | Rollback |
 |--------|-------|----------------|----------|
-| /health redaction + orders/cancelled handling + timeout retry + CI trigger (2026-09-01) | `e7c01375` + `6df8de9a` | CI run `33500459743` | `git revert` the merge → deploy. Reverting restores the catalogue leak on the public `/health`, so prefer a forward fix |
+| /health redaction + orders/cancelled handling + timeout retry + CI trigger (2026-09-01) | `e7c01375`, test fix `6df8de9a`, scope revert `ed293b60` | CI runs `33500459743`, `33501483988` | `git revert` the merge → deploy. Reverting restores the catalogue leak on the public `/health`, so prefer a forward fix |
+
+> **Do not put a `customer` selection back into `ORDER_FIELDS`.** It needs the `read_customers`
+> scope, which this app does not hold, and Shopify fails the *entire* order query with
+> `ACCESS_DENIED` rather than dropping the field — every push and sync stops. This happened on
+> 2026-09-01 and was reverted in `ed293b60`; a test in `test/barry-payload-rules.test.mjs`
+> guards it now.
 | Barry DELIVERED → Shopify fulfillment event (2026-08-31) | `b29a057` (#1371) | `6514b81a` | Redeploy pre-`b29a057` worker, or `git revert b29a057` → deploy |
 | Kontroll partial fulfill fix (2026-08-26) | `cebd48e` (#1315) | `c6a441a2` | Redeploy pre-`cebd48e` worker, or revert merge → deploy |
 | Kontroll companion fulfillment sync (2026-08-26) | `13dce9b5` (#1314) | prior to partial fix | Revert `shopifyFulfillment.mjs` + `statusSync.mjs` from that PR → deploy |
