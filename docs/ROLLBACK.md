@@ -141,6 +141,41 @@ A kulcs helye lokálisan: `artifacts/admin-auth/ADMIN_DEV_AUTH_KEY.txt` (gitigno
 
 ---
 
+## metabox-shopify (`glux-metabox` Worker)
+
+**Deploy:** `cd scripts/metabox_shopify && npm run deploy`  
+**Worker URL:** https://glux-metabox.gluxshop.workers.dev
+
+| Change | Merge | Deploy version | Rollback |
+|--------|-------|----------------|----------|
+| Barry DELIVERED → Shopify fulfillment event (2026-08-31) | `b29a057` (#1371) | `6514b81a` | Redeploy pre-`b29a057` worker, or `git revert b29a057` → deploy |
+| Kontroll partial fulfill fix (2026-08-26) | `cebd48e` (#1315) | `c6a441a2` | Redeploy pre-`cebd48e` worker, or revert merge → deploy |
+| Kontroll companion fulfillment sync (2026-08-26) | `13dce9b5` (#1314) | prior to partial fix | Revert `shopifyFulfillment.mjs` + `statusSync.mjs` from that PR → deploy |
+
+**Runtime KV (`statusSync`):**
+
+| Setting | Rollback |
+|---------|----------|
+| `statusSync.enabled: false` | Stops cron writes; manual `status-apply` still works with API key |
+| `statusSync.previewOnly: true` | Cron dry-run only; order-page Sync still writes when invoked |
+
+**Delivered backfill (Shopify fulfillment events):**
+
+```bash
+# Direct (no METABOX_API_KEY): glux-brain + Shopify Admin API
+node scripts/metabox_shopify/scripts/backfill-delivered-events.mjs --since=2026-08-17 --dry-run
+node scripts/metabox_shopify/scripts/backfill-delivered-events.mjs --since=2026-08-17
+
+# Worker API (requires METABOX_API_KEY)
+METABOX_API_KEY=... node scripts/metabox_shopify/scripts/backfill-delivered-events.mjs --mode=worker --since=2026-08-17
+```
+
+Undo mistaken DELIVERED events: no bulk undo API — case-by-case in Shopify Admin or support.
+
+Agent logs: `docs/agent-log/metabox-shopify/20260831T063600Z-delivered-status-sync.md`, `20260826T102700Z-kontroll-partial-fix.md`.
+
+---
+
 ## Shopify theme
 
 1. Duplicate theme preview
