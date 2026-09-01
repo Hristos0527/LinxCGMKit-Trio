@@ -149,7 +149,7 @@ A kulcs helye lokálisan: `artifacts/admin-auth/ADMIN_DEV_AUTH_KEY.txt` (gitigno
 
 | Change | Merge | Deploy version | Rollback |
 |--------|-------|----------------|----------|
-| /health redaction + orders/cancelled handling + CI trigger (2026-09-01) | not merged yet | — | `git revert` the merge → deploy. Reverting restores the catalogue leak on the public `/health`, so prefer a forward fix |
+| /health redaction + orders/cancelled handling + timeout retry + CI trigger (2026-09-01) | `e7c01375` + `6df8de9a` | CI run `33500459743` | `git revert` the merge → deploy. Reverting restores the catalogue leak on the public `/health`, so prefer a forward fix |
 | Barry DELIVERED → Shopify fulfillment event (2026-08-31) | `b29a057` (#1371) | `6514b81a` | Redeploy pre-`b29a057` worker, or `git revert b29a057` → deploy |
 | Kontroll partial fulfill fix (2026-08-26) | `cebd48e` (#1315) | `c6a441a2` | Redeploy pre-`cebd48e` worker, or revert merge → deploy |
 | Kontroll companion fulfillment sync (2026-08-26) | `13dce9b5` (#1314) | prior to partial fix | Revert `shopifyFulfillment.mjs` + `statusSync.mjs` from that PR → deploy |
