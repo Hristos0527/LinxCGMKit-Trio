@@ -211,6 +211,36 @@ Részletes lépésenkénti runbook és scope-ellenőrzés: [`glux-ai/STOREFRONT_
 
 ---
 
+## glux-emag (Cloudflare Worker)
+
+Új worker, 2026-09-03-tól. **Nem ír sehova**: `pushEnabled` alapból `false`, a `/api/status`
+kimondja, hogy `pushImplemented: false`, és teszt bukik, ha a `worker.mjs` bármilyen mutációt
+elér. Vagyis egy elrontott verzió itt nem tud kárt tenni Shopify-on vagy Barryn — a rollback
+csak a felület visszaállítása.
+
+```bash
+# mit lehet visszaállítani
+npx wrangler deployments list --name glux-emag
+npx wrangler rollback --name glux-emag --version-id <ID>
+```
+
+Ami a workerben van, és **nincs** a repóban (rollback nem hozza vissza, és nem is rontja el):
+
+| titok | mire kell |
+|---|---|
+| `SHOPIFY_CLIENT_SECRET` | a session token ellenőrzése; enélkül minden `/api` 401 |
+| `EMAG_USER`, `EMAG_PASS` | az eMAG olvasás (`order/count`, `order/read`) |
+
+KV: `EMAG_CONFIG = eb38fe3a50c648a1b07e81e5c5a9e266`. A `shopify:admin_token` kulcs 5 perces
+gyorsítótár, bármikor törölhető — a következő hívás újat kér:
+
+```bash
+npx wrangler kv key delete --namespace-id eb38fe3a50c648a1b07e81e5c5a9e266 "shopify:admin_token"
+```
+
+A beolvasott export (`import:current`) vásárlói adatot tartalmaz, és a felületről egy
+kattintással törölhető (Rendelések → Beolvasott adat törlése).
+
 ## task-board (GitHub Pages)
 
 **Live:** https://hristos0527.github.io/linx-presentation-site/task-board.html  
