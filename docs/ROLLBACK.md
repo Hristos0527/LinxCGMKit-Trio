@@ -230,6 +230,7 @@ Ami a workerben van, és **nincs** a repóban (rollback nem hozza vissza, és ne
 |---|---|
 | `SHOPIFY_CLIENT_SECRET` | a session token ellenőrzése; enélkül minden `/api` 401 |
 | `EMAG_USER`, `EMAG_PASS` | az eMAG olvasás (`order/count`, `order/read`) |
+| `GLUX_INTERNAL_SERVICE_TOKEN` | a `/api/internal/emag/*` csak-olvasó diagnosztika. Ha nincs beállítva, ezek az útvonalak **zárva** vannak, nem nyitva |
 
 KV: `EMAG_CONFIG = eb38fe3a50c648a1b07e81e5c5a9e266`. A `shopify:admin_token` kulcs 5 perces
 gyorsítótár, bármikor törölhető — a következő hívás újat kér:
