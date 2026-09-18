@@ -202,7 +202,7 @@ A widget bekapcsolása/kikapcsolása egy Theme Editor **app embed** kapcsoló, n
 | Változtatás | Rollback |
 |-------------|----------|
 | GluX AI app embed bekapcsolva (draft vagy live témán) | Theme Editor → App embeds → **GluX AI** ki, Save. Azonnali, redeploy nélkül. |
-| Molin AI letiltva a GLUX 2.0-n (élő átállás) | Theme Editor → App embeds → **Molin AI** vissza be, **GluX AI** ki, Save. Azonnali. |
+| A korábbi chat widget letiltva a GLUX 2.0-n (élő átállás) | Theme Editor → App embeds → a **korábbi chat widget** vissza be, **GluX AI** ki, Save. Azonnali. |
 | `mm4h0g-rh.myshopify.com` tenant config publikálva a `glux-chat` KV-ba (`tenant:mm4h0g-rh.myshopify.com:live`) | `glux-ai-admin` dashboard → Publish oldal → **Rollback** gomb (`POST /admin/v1/publish/rollback`, visszaállítja a draftot az előző live-ra) — ez nem törli a már kiküldött KV bejegyzést, ahhoz újra publikálni kell a korábbi draftot |
 | `shopify app deploy` (extension config új verziója a Partner Dashboardon) | Partner Dashboard-on egy korábbi extension-verzió visszaállítása, vagy `git revert` + `shopify app deploy` újra a régi `shopify.app.toml`/extension tartalommal |
 | App telepítve a boltra | Shopify admin → Apps → GluX AI → Uninstall (nem szükséges vészhelyzeti rollbacknek — az embed kikapcsolása elég) |

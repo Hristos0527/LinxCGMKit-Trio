@@ -35,6 +35,8 @@ install_hook() {
 }
 
 install_hook pre-push
+# 2026-09-18 ota: szol, ha tobb session dolgozik ugyanabban a munkamasolatban.
+install_hook pre-commit
 
 if $STRICT; then
   # Patch pre-push to use --strict (simple marker file)

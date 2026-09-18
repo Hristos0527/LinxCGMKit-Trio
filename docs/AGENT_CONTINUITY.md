@@ -25,9 +25,49 @@ Kapcsolódó: [`AGENT_OPERATIONS.md`](./AGENT_OPERATIONS.md), [`USER_PREFERENCES
 |-------|-----|------------|
 | **Minden team repo (auto)** | `scripts/sync_agent_continuity_to_repos.sh` | Ráírja a `.cursor/rules`, `AGENTS.md`, hookokat, CI-t |
 | **Repo (git)** | `.cursor/rules/*.mdc`, `AGENTS.md` | Cursor **automatikusan** betölti (alwaysApply) |
-| **Git hook** | `./scripts/install-git-hooks.sh` | Egyszer / klón — push előtt riport |
+| **Git hook** | `./scripts/install-git-hooks.sh` | Egyszer / klón — push előtt riport, **commit előtt figyelmeztetés, ha többen dolgoznak egy munkamásolatban** |
 | **GitHub Actions** | `agent-continuity.yml` + `sync-agent-continuity-repos.yml` | Hygiene + szétterítés master merge után |
 | **Cursor Team (dashboard)** | `docs/CURSOR_TEAM_RULES.md` | **Egyszer** a dashboardon → extra védelem minden projektre |
+
+### Egy session, egy munkamásolat
+
+**2026-09-18-án három Claude Code session futott egyszerre ugyanabban a mappában**
+(`/Users/lcdfix/Projects/linx-presentation-site`). Mindegyik helyesen viselkedett külön-külön
+— ágat váltott, commitolt —, de **közös munkafán**. A reflog megőrizte:
+
+```
+12:02:24  checkout: master -> fix/emag-no-expected-price
+12:03:30  checkout: fix/emag-no-expected-price -> agent/glux30-pagefly-leltar   ← másik session
+```
+
+A második sor egy olyan ágról váltott el, amin abban a pillanatban **nem commitolt
+módosítások** voltak. A munkafa lecserélődött, a rá következő `git add && git commit` már a
+másik állapoton futott, és a változások fele némán kimaradt a commitból. A commit lefutott,
+a PR zöld lett, a merge megtörtént — és a kód fele nem volt benne. **Aznap délelőtt
+háromszor.**
+
+Ez nem az auto-merge workflow volt. Az (`agent-branch-auto-merge.yml`) a mastert érinti, és
+egy GitHub Actions futás nem tud hozzányúlni a helyi munkafához.
+
+**A megoldás: sessionönként külön munkamásolat.**
+
+```bash
+./scripts/worktree.sh emag-voucher            # fix/emag-voucher, masterből
+./scripts/worktree.sh glux30-kepek agent/     # agent/glux30-kepek (auto-merge!)
+```
+
+Közös `.git` — közös történet, közös remote, közös branchek —, de **külön index és külön
+munkafa**. Két session nem tud egymás alá nyúlni, és ugyanazt az ágat a git eleve nem engedi
+két helyen kicsekkolni (`fatal: ... is already used by worktree at ...`). A worktree-k a repó
+**mellé** kerülnek (`../linx-worktrees/<név>`), nem bele: egy beágyazott munkamásolat
+előbb-utóbb bekerülne egy `git add -A`-be.
+
+Ha végeztél: `git worktree remove <könyvtár>`. Elárvult bejegyzések takarítása:
+`git worktree prune`.
+
+A `pre-commit` hook **nem tiltja** a commitot, csak kimondja, ha épp versenyhelyzetben vagy —
+és csak akkor szól, ha tényleg többen vagytok. Egy figyelmeztetés, ami mindig megjelenik, nem
+figyelmeztetés.
 
 ### Mely repókra?
 
