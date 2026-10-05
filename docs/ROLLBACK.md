@@ -242,6 +242,25 @@ npx wrangler kv key delete --namespace-id eb38fe3a50c648a1b07e81e5c5a9e266 "shop
 A beolvasott export (`import:current`) vásárlói adatot tartalmaz, és a felületről egy
 kattintással törölhető (Rendelések → Beolvasott adat törlése).
 
+## glux-whatsapp (Cloudflare Worker)
+
+Új worker, 2026-10-05-től: a GluX chatbot WhatsAppon (`workers/glux-whatsapp`, lásd a README-t).
+A glux-chat fájljaihoz nem nyúl, csak service bindingen hívja a `/chat`-et — a webes chatet
+semmilyen állapota nem érinti.
+
+**Leállítás rollback nélkül:** `https://glux-whatsapp.gluxshop.workers.dev/admin` → 3. Működés →
+kapcsoló ki (azonnali, deploy nélkül). Vészfék deploy-jal: `wrangler.toml` →
+`WHATSAPP_AUTOREPLY = "0"`.
+
+```bash
+npx wrangler deployments list --name glux-whatsapp
+npx wrangler rollback --name glux-whatsapp --version-id <ID>
+```
+
+Ami a workerben van, és **nincs** a repóban: a Meta-adatok (token, App Secret, App ID, WABA ID,
+verify token) a `WaConfig` Durable Objectben — a rollback nem törli őket. Új /admin kulcs: új
+lenyomat az `ADMIN_KEY_SHA256`-ba + deploy (README → „A /admin kulcs").
+
 ## task-board (GitHub Pages)
 
 **Live:** https://hristos0527.github.io/linx-presentation-site/task-board.html  
