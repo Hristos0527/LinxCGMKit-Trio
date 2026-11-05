@@ -351,6 +351,8 @@ Onboarding / Trello OAuth / info-gombok (2026-11-05, SW v9): `git revert <merge-
 Push-sheet freeze javítás (2026-11-05, SW v13): `git revert <merge-sha>` → dashboard deploy. Visszajön az automatikus Értesítések felugró lap onboardolt usereknél is (cache-törlés után újra „lefagyaszthat”).
 Áttekintés SWR / Tovább (2026-11-05, SW v14): `git revert <merge-sha>` → dashboard deploy.
 
+Frissítések freeze (2026-11-05, SW v17): `git revert <merge-sha>` → dashboard deploy. Visszajön a beragadó `serviceWorker.update()` a Frissítések megnyitásakor Android WebAPK-n.
+
 LinX pult blokk (2026-11-05, SW v16): `git revert <merge-sha>` → dashboard deploy. Ledger oldalon: lcdfixallee `git revert <merge-sha>` → `npx wrangler deploy` a `workers/lcdfix-ledger`-ben. A `LINX_DASH_KEY` secret mindkét workerén maradhat (ártalmatlan).
 
 
