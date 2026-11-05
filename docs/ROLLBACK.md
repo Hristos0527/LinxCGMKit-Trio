@@ -315,6 +315,25 @@ the agent log.
 
 ---
 
+## glux-aycm (Cloudflare Worker)
+
+**Élő (deploy után):** `https://glux-aycm.<account>.workers.dev` — AYCM QR+PIN → LinX 15 napos 20%, havi 3 db.
+
+```bash
+# Worker vissza
+cd workers/glux-aycm && npx wrangler rollback
+# vagy: git revert <merge-sha> → push master → deploy-workers.yml
+
+# Storefront
+# /pages/aycm unpublish vagy page.aycm template levétel theme push-sal
+
+# Shopify Admin: AYCM-* kedvezménykódok deaktiválása
+```
+
+D1 `aycm_quota` / `aycm_sessions` / `aycm_orders` ártalmatlan, ha a worker le van kapcsolva.
+
+---
+
 ## glux-dashboard (Cloudflare Worker)
 
 **Élő:** https://dashboard.glux.shop — a `workers/glux-dashboard` változása masterre pusholva a `deploy-workers.yml`-lel megy ki.
