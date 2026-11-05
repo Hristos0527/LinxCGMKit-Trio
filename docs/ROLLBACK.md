@@ -323,7 +323,7 @@ the agent log.
 cd workers/glux-dashboard && npx wrangler rollback
 ```
 
-A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:`, eszközön IndexedDB `glux-admin`) adatot nem ír a rendszerekbe. Visszaállítás: `git revert <merge-sha>` a masteren, utána a worker deploy. A KV-bejegyzések maguktól lejárnak (45–90 mp, a `slow:` és `rc:` kulcsok).
+A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:` / `overview:v1`, eszközön IndexedDB `glux-admin`) adatot nem ír a rendszerekbe. Visszaállítás: `git revert <merge-sha>` a masteren, utána a worker deploy. A KV-bejegyzések maguktól lejárnak (45–90 mp). Az első belépés (`onboarded` a `layout:<user>` KV-ban) és a Hristos `theme: light` a USERS-ben ugyanígy revertelhető.
 
 ---
 
