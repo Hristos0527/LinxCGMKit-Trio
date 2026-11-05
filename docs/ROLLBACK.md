@@ -315,6 +315,18 @@ the agent log.
 
 ---
 
+## glux-dashboard (Cloudflare Worker)
+
+**Élő:** https://dashboard.glux.shop — a `workers/glux-dashboard` változása masterre pusholva a `deploy-workers.yml`-lel megy ki.
+
+```bash
+cd workers/glux-dashboard && npx wrangler rollback
+```
+
+A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:`, eszközön IndexedDB `glux-admin`) adatot nem ír a rendszerekbe. Visszaállítás: `git revert <merge-sha>` a masteren, utána a worker deploy. A KV-bejegyzések maguktól lejárnak (45–90 mp, a `slow:` és `rc:` kulcsok).
+
+---
+
 ## repo-maintenance (git refs)
 
 | Változtatás | Rollback |
