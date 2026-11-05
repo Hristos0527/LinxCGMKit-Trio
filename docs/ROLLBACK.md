@@ -346,6 +346,8 @@ A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:` / `overview:v1`, es
 
 Értesítés-ikonok + Dóri fiók + Hristos kulcscsere (2026-11-05): `git revert <merge-sha>` visszaállítja a régi USERS SHA-kat (Hristos előző kulcsa újra él; Dóri kiesik). A `public/notify/*.png` a reverttel tűnik el.
 
+Onboarding / Trello OAuth / info-gombok (2026-11-05, SW v9): `git revert <merge-sha>` → dashboard deploy. A `trello:<user>` tokenek és a follow prefs a KV-ben maradnak; csak a kliens-flow és az `/api/me` cache-invalidálás megy vissza.
+
 ---
 
 ## repo-maintenance (git refs)
