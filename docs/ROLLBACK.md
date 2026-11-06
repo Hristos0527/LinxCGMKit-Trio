@@ -33,6 +33,7 @@ npm run deploy
 | Auto-kredit delay / idősáv (2026-08-18) | Admin → késleltetés `0` + idősáv `0–24` (azonnali mód), vagy Auto-kredit KI; vagy `git revert <merge-sha>` → `npm run smoke && npm run deploy` |
 | Admin closed-claims preload (2026-08-18) | `git revert 8c33de02` → `cd integrations/glux-ai-brain/branches/glux-garancia/worker && npm run smoke && npm run deploy` |
 | Board card opens exact claim (2026-08-18) | `git revert <merge-sha>` → Pages + `npm run smoke && npm run deploy` in garancia worker |
+| listClaimed KV pagination (2026-11-06) | `git revert <merge-sha>` → `deploy-workers.yml` `worker: glux-garancia` (ref `master`), or `cd integrations/glux-ai-brain/branches/glux-garancia/worker && npm run deploy` |
 
 **Smoke deploy előtt:** `npm run smoke`
 
