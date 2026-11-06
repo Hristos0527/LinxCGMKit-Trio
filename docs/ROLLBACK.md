@@ -359,7 +359,7 @@ Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulc
 
 Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
 
-Görgetés + Trello-kapcsoló + alsó hely (2026-11-06, SW v30): `git revert <merge-sha>` → dashboard deploy. A Trello-követés prefs a KV-ben marad.
+Görgetés + Trello-kapcsoló + alsó hely (2026-11-06, SW v30, merge `2e1e1b698f70ddec742359f0e4a4dc1a0c7871bd`): `git revert 2e1e1b698f70ddec742359f0e4a4dc1a0c7871bd` → dashboard deploy. A Trello-követés prefs a KV-ben marad.
 
 Áttekintés hézag + verzió-push + Trello invalid id (2026-11-06, SW v29, merge `9154180b494211d999fe9c28dd5321d3ff718bc6`): `git revert 9154180b494211d999fe9c28dd5321d3ff718bc6` → dashboard deploy. A KV `app-version-announced` a v29-et megjegyzi; töröld, ha a következő cronnak újra kell küldenie. A Trello-tokenek megmaradnak. A batch vessző második kódolása (`%252C`) külön merge; azt is reverteld, ha a követett kártya újra `invalid id`.
 
