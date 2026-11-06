@@ -348,6 +348,8 @@ A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:` / `overview:v1`, es
 
 Onboarding / Trello OAuth / info-gombok (2026-11-05, SW v9): `git revert <merge-sha>` → dashboard deploy. A `trello:<user>` tokenek és a follow prefs a KV-ben maradnak; csak a kliens-flow és az `/api/me` cache-invalidálás megy vissza.
 
+Google Naptár + csapat-esemény + OpenAI draft (2026-11-06, SW v20): `git revert <merge-sha>` → dashboard deploy. Felhasználónkénti `google:refresh:<userId>` a DASH_KV-ben marad (Profil → Naptár → Leválasztás törli). Secret rollback: `wrangler secret delete GOOGLE_CLIENT_ID|GOOGLE_CLIENT_SECRET|OPENAI_API_KEY` a `glux-dashboard` workerön, ha kell.
+
 Push-sheet freeze javítás (2026-11-05, SW v13): `git revert <merge-sha>` → dashboard deploy. Visszajön az automatikus Értesítések felugró lap onboardolt usereknél is (cache-törlés után újra „lefagyaszthat”).
 Áttekintés SWR / Tovább (2026-11-05, SW v14): `git revert <merge-sha>` → dashboard deploy.
 
