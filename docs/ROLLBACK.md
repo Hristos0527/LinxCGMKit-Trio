@@ -353,6 +353,8 @@ Google Naptár + csapat-esemény + OpenAI draft (2026-11-06, SW v20): `git rever
 
 Same-tab OAuth WebAPK (2026-11-06, SW v22): `git revert <merge-sha>` → dashboard deploy. Visszajön a `window.open` popup-flow standalone appban (Androidon újra elromlik a Trello/Google összekötés).
 
+Trello handoff + képernyőfrissítés (2026-11-06, SW v23): `git revert <merge-sha>` → dashboard deploy. A Trello-token újra a WebAPK fragmentjében vész el, és a belépés után a régi „nincs összekötve" állapot marad, amíg kézzel nem frissítenek. A `trello:handoff:*` KV-bejegyzések 2 perc alatt lejárnak.
+
 Google OAuth hyperfocus relay (2026-11-06): `git revert <merge-sha>` → deploy `glux-dashboard` + `task-board-api` (és hyperfocus proxy). A Naptár összekötés újra `redirect_uri_mismatch`, amíg a GCP-ben nincs `dashboard.glux.shop/google-callback.html`.
 
 Push-sheet freeze javítás (2026-11-05, SW v13): `git revert <merge-sha>` → dashboard deploy. Visszajön az automatikus Értesítések felugró lap onboardolt usereknél is (cache-törlés után újra „lefagyaszthat”).
