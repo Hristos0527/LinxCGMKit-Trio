@@ -355,7 +355,9 @@ Same-tab OAuth WebAPK (2026-11-06, SW v22): `git revert <merge-sha>` → dashboa
 
 Trello handoff + képernyőfrissítés (2026-11-06, SW v23): `git revert <merge-sha>` → dashboard deploy. A Trello-token újra a WebAPK fragmentjében vész el, és a belépés után a régi „nincs összekötve" állapot marad, amíg kézzel nem frissítenek. A `trello:handoff:*` KV-bejegyzések 2 perc alatt lejárnak.
 
-Android koppintás-fagyás frissítés után (2026-11-06, SW v26): `git revert <merge-sha>` → dashboard deploy. Visszajön a v25 viselkedés: új verzió után a WebAPK a következő koppintásra befagy.
+Profil-fagyás (2026-11-06, SW v28, merge `2577c9e6c5be69d47669ed4dbeb3809f26dab12d`): `git revert 2577c9e6c5be69d47669ed4dbeb3809f26dab12d` → dashboard deploy. Visszajön a profil megnyitása utáni végtelen ciklus, a koppintás újra megáll.
+
+Android koppintás-fagyás frissítés után (2026-11-06, SW v26, merge `adc943c0b47f8a778a7e67e3dd045eb5fe35b877`): `git revert adc943c0b47f8a778a7e67e3dd045eb5fe35b877` → dashboard deploy. Visszajön a v25 viselkedés: új verzió után a WebAPK a következő koppintásra befagy.
 
 Naptár fül + egyesített + (2026-11-06, SW v25, merge `27c97bd81fe71cc6898fc96f4cc0ab5e2660186a`): `git revert 27c97bd81fe71cc6898fc96f4cc0ab5e2660186a` → dashboard deploy. A fül és a `/api/priorities` eltűnik; a `prio:<userId>` KV-bejegyzések ártalmatlanul megmaradnak. A + újra a két külön opciót (Trello-feladat / csapat-esemény) nyitja.
 
