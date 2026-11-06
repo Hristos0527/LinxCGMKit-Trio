@@ -359,6 +359,8 @@ Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulc
 
 Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
 
+Trello egész lista (2026-11-06, SW v34): `git revert <merge-sha>` → dashboard deploy. A követés prefs a KV-ben marad.
+
 Trello lista választó (2026-11-06, SW v33, merge `4312bca06ccda5e57f34ed8f48b23837be8b11e8`): `git revert 4312bca06ccda5e57f34ed8f48b23837be8b11e8` → dashboard deploy. A követett listák a `prefs:<user>` trello.lists mezőjében vannak; a token megmarad. Worker: `fcaa9f38-07eb-4b22-97ca-10a7554b88c1`.
 
 Összekötés jel (2026-11-06, SW v32, merge `7d5d6b90d31c936d4685b12da3695463b7900539`): `git revert 7d5d6b90d31c936d4685b12da3695463b7900539` → dashboard deploy. A Trello- és Google-token a KV-ben marad.
