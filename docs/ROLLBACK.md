@@ -355,6 +355,8 @@ Same-tab OAuth WebAPK (2026-11-06, SW v22): `git revert <merge-sha>` → dashboa
 
 Trello handoff + képernyőfrissítés (2026-11-06, SW v23): `git revert <merge-sha>` → dashboard deploy. A Trello-token újra a WebAPK fragmentjében vész el, és a belépés után a régi „nincs összekötve" állapot marad, amíg kézzel nem frissítenek. A `trello:handoff:*` KV-bejegyzések 2 perc alatt lejárnak.
 
+Fehér képernyő javítás (2026-11-06, SW v24): `git revert <merge-sha>` → dashboard deploy. Visszajön a v23 szintaxishiba, az Android app újra üresen indul.
+
 Google OAuth hyperfocus relay (2026-11-06): `git revert <merge-sha>` → deploy `glux-dashboard` + `task-board-api` (és hyperfocus proxy). A Naptár összekötés újra `redirect_uri_mismatch`, amíg a GCP-ben nincs `dashboard.glux.shop/google-callback.html`.
 
 Push-sheet freeze javítás (2026-11-05, SW v13): `git revert <merge-sha>` → dashboard deploy. Visszajön az automatikus Értesítések felugró lap onboardolt usereknél is (cache-törlés után újra „lefagyaszthat”).
