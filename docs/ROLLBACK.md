@@ -350,6 +350,8 @@ Onboarding / Trello OAuth / info-gombok (2026-11-05, SW v9): `git revert <merge-
 
 Google Naptár + csapat-esemény + OpenAI draft (2026-11-06, SW v20): `git revert <merge-sha>` → dashboard deploy. Felhasználónkénti `google:refresh:<userId>` a DASH_KV-ben marad (Profil → Naptár → Leválasztás törli). Secret rollback: `wrangler secret delete GOOGLE_CLIENT_ID|GOOGLE_CLIENT_SECRET|OPENAI_API_KEY` a `glux-dashboard` workerön, ha kell.
 
+Same-tab OAuth WebAPK (2026-11-06, SW v22): `git revert <merge-sha>` → dashboard deploy. Visszajön a `window.open` popup-flow standalone appban (Androidon újra elromlik a Trello/Google összekötés).
+
 Push-sheet freeze javítás (2026-11-05, SW v13): `git revert <merge-sha>` → dashboard deploy. Visszajön az automatikus Értesítések felugró lap onboardolt usereknél is (cache-törlés után újra „lefagyaszthat”).
 Áttekintés SWR / Tovább (2026-11-05, SW v14): `git revert <merge-sha>` → dashboard deploy.
 
