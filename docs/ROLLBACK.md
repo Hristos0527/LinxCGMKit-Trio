@@ -355,6 +355,10 @@ Same-tab OAuth WebAPK (2026-11-06, SW v22): `git revert <merge-sha>` → dashboa
 
 Trello handoff + képernyőfrissítés (2026-11-06, SW v23): `git revert <merge-sha>` → dashboard deploy. A Trello-token újra a WebAPK fragmentjében vész el, és a belépés után a régi „nincs összekötve" állapot marad, amíg kézzel nem frissítenek. A `trello:handoff:*` KV-bejegyzések 2 perc alatt lejárnak.
 
+Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
+
+Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
+
 Profil-fagyás (2026-11-06, SW v28, merge `2577c9e6c5be69d47669ed4dbeb3809f26dab12d`): `git revert 2577c9e6c5be69d47669ed4dbeb3809f26dab12d` → dashboard deploy. Visszajön a profil megnyitása utáni végtelen ciklus, a koppintás újra megáll.
 
 Android koppintás-fagyás frissítés után (2026-11-06, SW v26, merge `adc943c0b47f8a778a7e67e3dd045eb5fe35b877`): `git revert adc943c0b47f8a778a7e67e3dd045eb5fe35b877` → dashboard deploy. Visszajön a v25 viselkedés: új verzió után a WebAPK a következő koppintásra befagy.
