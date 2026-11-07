@@ -359,6 +359,10 @@ Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulc
 
 Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
 
+Beállítások felül (2026-11-07, SW v36, merge `dbc6852aba92ada838bf1f467417c2235591a439`): `git revert dbc6852aba92ada838bf1f467417c2235591a439` → dashboard deploy. A szekciók sorrendje a KV-ben marad. Kódverzió: `2471b9bc-45bd-4b40-92e4-c8d49e84dccb`. A secret-írások utáni élő verzió: `264325e9-6363-4beb-8df1-9e38a8f8facb`.
+
+Saját fül (2026-11-07, SW v35, merge `923736a487afdc31a03f7598ebc8f9d8cb492252`): `git revert 923736a487afdc31a03f7598ebc8f9d8cb492252` → dashboard deploy. Visszajön a Rendszerek alsó fül. Worker: `9be705c6-9766-4d56-ab84-802988d58f12`.
+
 Trello egész lista (2026-11-06, SW v34, merge `282ef1e1d5591d8006bd6ac2f33cb2b8ea32a596`): `git revert 282ef1e1d5591d8006bd6ac2f33cb2b8ea32a596` → dashboard deploy. A követés prefs a KV-ben marad. Worker: `d5d0cf49-d173-48a9-a8ee-dd6e9180f1c1`.
 
 Trello lista választó (2026-11-06, SW v33, merge `4312bca06ccda5e57f34ed8f48b23837be8b11e8`): `git revert 4312bca06ccda5e57f34ed8f48b23837be8b11e8` → dashboard deploy. A követett listák a `prefs:<user>` trello.lists mezőjében vannak; a token megmarad. Worker: `fcaa9f38-07eb-4b22-97ca-10a7554b88c1`.
