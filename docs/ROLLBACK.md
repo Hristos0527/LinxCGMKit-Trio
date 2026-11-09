@@ -362,6 +362,8 @@ Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulc
 
 Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
 
+Éves bevétel (2026-11-09, merge `62cba2cc291949d72331f9b6ce047fb55f758806`): `git revert 62cba2cc291949d72331f9b6ce047fb55f758806` → dashboard és metabox deploy. A Shopify app verziót a Dev Dashboardon a `glux-metabox-26` előtti verzióra kell visszaállítani. A `dash:sales:v1:` cache-ben lévő napok megmaradnak.
+
 Módosításnapló (2026-11-09, merge `75f47afc8d585d7d776523de0591ec0add52f775`): `git revert 75f47afc8d585d7d776523de0591ec0add52f775` → dashboard deploy. A `docs/glux-dashboard/activity/LOG.md` már beírt sorai megmaradnak. A KV `activity:pending` törölhető, ha rossz sor várakozik. A `GITHUB_SYNC_TOKEN` secret törlése leállítja a GitHub-írást, a mentés ettől még működik. Kódverzió: `67a22709-b6e8-4901-8931-2070e81381f6`. Secrets utáni élő verzió: `1513053a-71b5-43bd-b801-6040ac92f5c2`.
 
 Hristos Trello követés (2026-11-09): a `Saját Trello táblám` (`6776bdc1859b15fb0b17a89d`) és a `Teendő` lista (`6776bdc22740a6572fa8d2f3`) kikerült a `prefs:ugyvezeto` Trello-követéséből. A token megmaradt. Visszatétel: `PUT /api/trello/follow` Hristos kulcsával, a két megmaradt tábla mellé visszaírva ezt a táblát és listát. A hiba ettől újra megjelenik.
