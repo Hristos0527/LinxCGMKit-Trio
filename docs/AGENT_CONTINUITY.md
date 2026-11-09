@@ -88,6 +88,7 @@ Részletek: `task-board-repos.json` → `agent_continuity` szekció.
 2. Olvasd: `docs/AGENT_STATUS.md`
 3. Keress régi munkát: `git branch -a | grep -E 'cursor/|agent/'`, `gh pr list`, `git log --oneline --all --grep="kulcsszó"`
 4. Ha van releváns nyitott branch/PR → **folytasd azt**, ne új branch-et.
+5. Hristos fejlesztése a GitHubon: `git log origin/master --author=Hristos0527` és a nyitott PR-jai, plusz `docs/glux-dashboard/activity/LOG.md`. A masteren lévő commitját és a naplóban lévő mentését ne írd felül, és ne építsd újra.
 
 ### Munka közben
 
