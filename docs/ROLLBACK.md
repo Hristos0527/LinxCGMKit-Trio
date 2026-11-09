@@ -34,6 +34,7 @@ npm run deploy
 | Admin closed-claims preload (2026-08-18) | `git revert 8c33de02` → `cd integrations/glux-ai-brain/branches/glux-garancia/worker && npm run smoke && npm run deploy` |
 | Board card opens exact claim (2026-08-18) | `git revert <merge-sha>` → Pages + `npm run smoke && npm run deploy` in garancia worker |
 | listClaimed KV pagination (2026-11-06) | `git revert <merge-sha>` → `deploy-workers.yml` `worker: glux-garancia` (ref `master`), or `cd integrations/glux-ai-brain/branches/glux-garancia/worker && npm run deploy` |
+| CLAIMINDEX admin KV 429 fix (2026-11-09) | `git revert <merge-sha>` → `deploy-workers.yml` `worker: glux-garancia` (ref `master`). Optional: delete KV keys `CLAIMINDEX` + `CLAIMINDEXBUILD` if a partial rebuild is stuck. |
 
 **Smoke deploy előtt:** `npm run smoke`
 
