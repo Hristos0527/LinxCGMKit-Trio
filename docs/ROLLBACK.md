@@ -360,6 +360,8 @@ Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulc
 
 Trello return URL (2026-11-06): a worker `TRELLO_KEY` secreten a GluX Admin kulcs van, a deploy a `DASHBOARD_TRELLO_KEY` repo-secretből írja. Vissza a régi (mindent elutasító) kulcsra: a `glux-dashboard` workerre `wrangler secret put TRELLO_KEY` a repo `TRELLO_KEY` secretjéből, és a workflow-ban ne a `DASHBOARD_TRELLO_KEY` menjen fel. A task-board kulcsa ettől független.
 
+Hristos Trello követés (2026-11-09): a `Saját Trello táblám` (`6776bdc1859b15fb0b17a89d`) és a `Teendő` lista (`6776bdc22740a6572fa8d2f3`) kikerült a `prefs:ugyvezeto` Trello-követéséből. A token megmaradt. Visszatétel: `PUT /api/trello/follow` Hristos kulcsával, a két megmaradt tábla mellé visszaírva ezt a táblát és listát. A hiba ettől újra megjelenik.
+
 Bevétel a köszönés alatt (2026-11-09, SW v46, merge `97496ed34156117919389948763f5352db89b76f`): `git revert 97496ed34156117919389948763f5352db89b76f` → dashboard deploy. A bevétel visszakerül a célok és a listák alá. Kódverzió: `7be6dbdb-4831-43e6-98f3-8c6960296ea6`. Secrets utáni élő verzió: `2734d19b-5f12-4e0a-b9bd-92c20b618333`.
 
 Áttekintés célok és lenyitható grafikon (2026-11-09, SW v45, merge `9fdccec91259ef02de65cbf4b3291cdaf0acc450` a v44 `23228d7fc2ee2fa31dc00ce480c4678ba129c300` fölött): `git revert 9fdccec91259ef02de65cbf4b3291cdaf0acc450` majd `git revert 23228d7fc2ee2fa31dc00ce480c4678ba129c300` → dashboard deploy. Visszajön a nagy bevételgrafikon, a célok nem a lista fölött vannak. Kódverzió: `2e0f4cef-2728-429d-83eb-79282d01e401`. Secrets utáni élő verzió: `2e00f8a0-83ca-493a-ae4d-c7f035c42d9b`.
