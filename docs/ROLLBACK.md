@@ -151,6 +151,7 @@ A kulcs helye lokálisan: `artifacts/admin-auth/ADMIN_DEV_AUTH_KEY.txt` (gitigno
 
 | Change | Merge | Deploy version | Rollback |
 |--------|-------|----------------|----------|
+| Process panel uses Barry order_id (2026-11-20) | see agent log | deploy-workers.yml on master | `git revert <merge>` → `deploy-workers.yml` `worker: glux-metabox` (ref `master`). The panel goes back to the reception-date list and prints `barry_http_409` for a duplicate. Stored `barryParcelId` values stay in KV and are unused by the old code. |
 | Gmail via task-board binding (2026-11-09) | `1e37dbed` (PR #2482) | `0ea278ab-d459-4bef-b596-423a2b2fea72` (run 42637837416) | `git revert 1e37dbed` → `deploy-workers.yml` `worker: glux-metabox` (ref `master`). Removes `TASK_BOARD_SERVICE` binding; Gmail panel falls back to unconfigured / direct secrets. |
 | Visszáru case panel UI (2026-11-09) | `053df105` (PR #2477) | `2a90a13c-3599-4654-9e0d-d5b76673210a` (run 42634310490) | `git revert 053df105` → `deploy-workers.yml` `worker: glux-metabox` (ref `master`). |
 | Visszáru lista szélesség (2026-11-09) | `45b96fb8` (PR #2472) | `a6f5dce0-baae-4a5c-824a-3cda08438365` (run 42632600350) | `git revert 45b96fb8` → `deploy-workers.yml` `worker: glux-metabox` (ref `master`). |
