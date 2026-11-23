@@ -349,6 +349,8 @@ D1 `aycm_quota` / `aycm_sessions` / `aycm_orders` ártalmatlan, ha a worker le v
 cd workers/glux-dashboard && npx wrangler rollback
 ```
 
+Gépes szélesség (2026-11-23, `glux-admin-v78`, merge `1dcd9e08cf67032affed835d6946269198e1f4df`): `git revert 1dcd9e08cf67032affed835d6946269198e1f4df` a masteren, utána a `deploy-workers.yml` a `glux-dashboard` workerre. Visszajön a középre zárt 760 px-es oszlop. A bal menü és a telefonos alsó sáv megmarad.
+
 Gépes menü (2026-11-20, `glux-admin-v77`, merge `a3180161711f90d956e0a04d25af0a8279876c86`): `git revert a3180161711f90d956e0a04d25af0a8279876c86` a masteren, utána a `deploy-workers.yml` a `glux-dashboard` workerre. Visszajön a régi bal sáv (Áttekintés, Naptár, Továbbiak). A telefonos alsó sáv ettől a változástól nem függ. A `sessionStorage` `glux-desk-area` kulcs magától elmúlik.
 
 A 2026-11-05-ös olvasás-gyorsítótár (KV `rc:` / `slow:` / `overview:v1`, eszközön IndexedDB `glux-admin`) adatot nem ír a rendszerekbe. Visszaállítás: `git revert <merge-sha>` a masteren, utána a worker deploy. A KV-bejegyzések maguktól lejárnak (45–90 mp). Az első belépés (`onboarded` a `layout:<user>` KV-ban) és a Hristos `theme: light` a USERS-ben ugyanígy revertelhető.
