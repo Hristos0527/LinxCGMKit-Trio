@@ -349,6 +349,8 @@ D1 `aycm_quota` / `aycm_sessions` / `aycm_orders` ártalmatlan, ha a worker le v
 cd workers/glux-dashboard && npx wrangler rollback
 ```
 
+Alacsony főoldali widget (2026-11-23, `glux-admin-v80`, merge `a82d79d09a46bfb0a08bcad60e8cc31011fd2097`): `git revert a82d79d09a46bfb0a08bcad60e8cc31011fd2097` a masteren, utána a `deploy-workers.yml` a `glux-dashboard` workerre. Visszajön a magas gépes widget, és a főoldalról lekerülnek a figyelemkártyák. A telefonos oldal ettől nem függ.
+
 Gépes olvashatóság (2026-11-23, `glux-admin-v79`, merge `50aa4d6efc513a765cf846e1702ac3075e304223`): `git revert 50aa4d6efc513a765cf846e1702ac3075e304223` a masteren, utána a `deploy-workers.yml` a `glux-dashboard` workerre. Visszajön a v78-as gépes elrendezés (üres navy blokk, két sáv, széléig futó listák, lebegő gombok). A telefonos alsó sáv ettől nem függ.
 
 Gépes szélesség (2026-11-23, `glux-admin-v78`, merge `1dcd9e08cf67032affed835d6946269198e1f4df`): `git revert 1dcd9e08cf67032affed835d6946269198e1f4df` a masteren, utána a `deploy-workers.yml` a `glux-dashboard` workerre. Visszajön a középre zárt 760 px-es oszlop. A bal menü és a telefonos alsó sáv megmarad.
